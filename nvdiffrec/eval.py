@@ -46,6 +46,12 @@ RADIUS = 3.0
 # Loss setup
 ###############################################################################
 
+#  - smape: Symmetric Mean Absolute Percentage Error
+#  - mse: Mean Squared Error
+#  - logl1: Logarithmic L1 loss
+#  - logl2: Logarithmic L2 loss
+#  - relmse: Relative Mean Squared Error
+
 @torch.no_grad()
 def createLoss(FLAGS):
     if FLAGS.loss == "smape":
@@ -64,6 +70,12 @@ def createLoss(FLAGS):
 ###############################################################################
 # Mix background into a dataset image
 ###############################################################################
+
+# - black: Black background
+# - white: White background
+# - checker: Checkerboard background
+# - reference: Use the image as background
+# - random: Random background
 
 @torch.no_grad()
 def prepare_batch(target, bg_type='black'):
@@ -91,6 +103,21 @@ def prepare_batch(target, bg_type='black'):
 ###############################################################################
 # UV - map geometry & convert to a mesh
 ###############################################################################
+
+# whats the purpose of this function?
+# - this function is used to create a UV map for the geometry
+# - the UV map is created using xatlas
+# - the UV map is then used to create a new mesh with the UV map
+# - the new mesh is then rendered to get the mask, kd, ks, and normal
+# - the mask, kd, ks, and normal are then used to create a new material
+# - the new material is then used to create a new mesh
+# - the new mesh is then returned
+
+# whats the UV map?
+# - UV mapping is the 3D modeling process of making a 2D image representation of a 3D model's surface
+# - the UV map is used to apply textures to the 3D model
+# - the UV map is a 2D representation of the 3D model's surface
+# - the UV map is used to map the 2D texture to the 3D model's surface
 
 @torch.no_grad()
 def xatlas_uvmap(glctx, geometry, mat, FLAGS):
@@ -349,6 +376,11 @@ if __name__ == "__main__":
     FLAGS.learn_light         = False
     FLAGS.cropped             = False
     FLAGS.random_lgt          = False
+
+    # how can i know the resolution of the tetrahedral mesh?
+    # - the resolution of the tetrahedral mesh can be found by loading the mesh and calculating the bounding box size 
+    # i only know my spacing is 0.5 , whats the resolution of the mesh?
+    # - the resolution of the mesh can be calculated by dividing the size of the bounding box by the spacing
 
     if FLAGS.config is not None:
         data = json.load(open(FLAGS.config, 'r'))
