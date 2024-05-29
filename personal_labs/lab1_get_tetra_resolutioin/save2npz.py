@@ -1,41 +1,24 @@
 import numpy as np
-
-def read_tet_file(tet_file_path):
-    """
-    Read a .tet file and extract vertices and tetrahedra information.
-    
-    Args:
-    - tet_file_path (str): Path to the .tet file.
-    
-    Returns:
-    - vertices (np.ndarray): Array of vertices.
-    - tetrahedra (np.ndarray): Array of tetrahedra.
-    """
-    vertices = []
-    tetrahedra = []
-
-    with open(tet_file_path, 'r') as file:
+def read_tet_file(file_path):
+    with open(file_path, 'r') as file:
         lines = file.readlines()
-        vertex_section = False
-        tetrahedron_section = False
 
-        for line in lines:
-            if line.startswith("Vertices"):
-                vertex_section = True
-                continue
-            elif line.startswith("Tetrahedra"):
-                vertex_section = False
-                tetrahedron_section = True
-                continue
+    # First line contains the counts
+    header = lines[0].strip().split()
+    num_vertices = int(header[1])
+    num_tetrahedra = int(header[2])
 
-            if vertex_section:
-                parts = line.strip().split()
-                if len(parts) == 3:
-                    vertices.append([float(parts[0]), float(parts[1]), float(parts[2])])
-            elif tetrahedron_section:
-                parts = line.strip().split()
-                if len(parts) == 4:
-                    tetrahedra.append([int(parts[0]), int(parts[1]), int(parts[2]), int(parts[3])])
+    # Read vertices
+    vertices = []
+    for i in range(1, num_vertices + 1):
+        parts = lines[i].strip().split()
+        vertices.append([float(x) for x in parts])
+
+    # Read tetrahedra
+    tetrahedra = []
+    for i in range(num_vertices + 1, num_vertices + 1 + num_tetrahedra):
+        parts = lines[i].strip().split()
+        tetrahedra.append([int(x) for x in parts])
 
     return np.array(vertices), np.array(tetrahedra)
 
@@ -56,5 +39,5 @@ output_file_path = '/Users/minggh/Documents/USC_ADS/lab_Doc_Shi/code/shapeDiffus
 
 vertices, tetrahedra = read_tet_file(tet_file_path)
 save_to_npz(vertices, tetrahedra, output_file_path)
-
+print(f"Read {len(vertices)} vertices and {len(tetrahedra)} tetrahedra")
 print(f"Saved .npz file to {output_file_path}")
