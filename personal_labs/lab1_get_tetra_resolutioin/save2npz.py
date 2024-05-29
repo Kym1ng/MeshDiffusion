@@ -23,14 +23,6 @@ def read_tet_file(file_path):
     return np.array(vertices), np.array(tetrahedra)
 
 def save_to_npz(vertices, tetrahedra, output_file_path):
-    """
-    Save vertices and tetrahedra information to a .npz file.
-    
-    Args:
-    - vertices (np.ndarray): Array of vertices.
-    - tetrahedra (np.ndarray): Array of tetrahedra.
-    - output_file_path (str): Path to the output .npz file.
-    """
     np.savez(output_file_path, vertices=vertices, tetrahedra=tetrahedra)
 
 # Example usage
